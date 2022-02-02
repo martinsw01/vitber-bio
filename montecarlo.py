@@ -1,2 +1,3 @@
-import nudlsøncjksmpy as np
-dslkmdskm
+import numpy as np
+
+print("Martin er ganske kul egt")
