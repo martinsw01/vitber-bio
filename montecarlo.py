@@ -1,3 +1,3 @@
 import numpy as np
 
-print("Martin er ganske kul egt")
+print("Martin er veldig kul egt")
