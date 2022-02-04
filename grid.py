@@ -1,7 +1,3 @@
-def create_grid(N):
-    pass
-
-
 def choose_random_polymer(grid):
     pass
 
