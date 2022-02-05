@@ -44,15 +44,19 @@ def random_available_position(grid):
 
 def random_available_neighbour(grid, monomer_positions):
     N = len(grid)
-    neighbourhood = [((i + dx)%N, (j + dy)%N) for dx, dy in neighborhood_add_indices
+    neighbourhood = [((i + dx) % N, (j + dy) % N) for dx, dy in neighborhood_add_indices
                      for i, j in monomer_positions
-                     if grid[(i + dx) % N, (j + dy)%N] == 0]
+                     if grid[(i + dx) % N, (j + dy) % N] == 0]
     return random_element(neighbourhood)
 
 
 def create_grid(N, M, L):
-    grid = np.zeros((N, N))
-    for i in range(1, M + 1):
+    grid = np.zeros((N, N), dtype=int)
+    polymers = np.arange(-M-1, M + 1)
+    np.random.shuffle(polymers)
+    for i in polymers:
+        if i == 0:
+            continue
         random_position = get_random_valid_position(grid, is_legal_polymer_placement)
         grid[random_position] = i
         monomer_positions = np.zeros((L, 2), dtype=int)
@@ -63,7 +67,7 @@ def create_grid(N, M, L):
                 grid[random_neighbour] = i
                 monomer_positions[j] = random_neighbour
             except ValueError as e:
-                raise ValueError(f"Not enough space for M={M} polymers with L={L} monomers in a NxN={N}x{N} grid", e)
+                raise ValueError(f"Not enough space for 2*M=2*{M} polymers with L={L} monomers in a NxN={N}x{N} grid", e)
     return grid
 
 
