@@ -15,7 +15,7 @@ def create_plotter(axs=None):
     def update_plot(grid, energy):
         ax_mesh.clear()
         ax_plot.clear()
-        ax_mesh.pcolormesh(np.sign(grid))
+        ax_mesh.pcolormesh(np.sign(grid[::-1,]))
         ax_plot.plot(energy)
         plt.pause(0.001)
 
@@ -27,6 +27,6 @@ def show_monomers(grid, M):
     Input is the grid (grid) as well as the number of monomers (M).
     """
     plt.figure(1)
-    plt.pcolormesh(np.sign(grid))
+    plt.pcolormesh(np.sign(grid)[::-1,])
     plt.title(f"{M} monomers")
     plt.show()
