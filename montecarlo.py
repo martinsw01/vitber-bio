@@ -29,5 +29,7 @@ def monte_carlo(grid, N_s, M, T):
 
         epsilon[i] = energy
 
+    return grid, epsilon
+
 
 
