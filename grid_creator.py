@@ -1,6 +1,5 @@
-from random import random
-
 import numpy as np
+import random
 
 
 def create_grid(N, M):
