@@ -20,3 +20,13 @@ def create_plotter(axs=None):
         plt.pause(0.001)
 
     return update_plot
+
+#oppgave 1b
+def show_monomers(grid, M):
+    """
+    Input is the grid (grid) as well as the number of monomers (M).
+    """
+    plt.figure(1)
+    plt.pcolormesh(np.sign(grid))
+    plt.title(f"{M} monomers")
+    plt.show()
