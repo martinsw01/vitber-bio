@@ -1,5 +1,5 @@
 import numpy as np
-from grid import calc_energy, choose_random_polymer, choose_random_direction, is_illegal_move, move_polymer
+from old_grid import calc_energy, choose_random_polymer, choose_random_direction, is_illegal_move, move_polymer
 
 k_b = 1
 

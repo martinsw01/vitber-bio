@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 
 neighborhood_add_indices = np.array([[-1, 0], [0, -1], [1, 0], [0, 1]])
@@ -72,4 +73,7 @@ def create_grid(N, M, L):
 
 
 if __name__ == '__main__':
-    create_grid(1000, 100, 100)
+    for _ in range(100):
+        plt.pcolormesh(np.sign(create_grid(100, 10, 50)))
+        plt.pause(1)
+    plt.show()
