@@ -1,5 +1,5 @@
 import numpy as np
-from grid import neighbour_indices
+from grid import neighbor_coordinates
 
 ε_r = 78  # [1] Relative permittivity
 ε_0 = 8.85418782e-12  # vacuum permittivity[m^-3 kg^-1 s^4 A^2]
@@ -16,8 +16,8 @@ def calc_energy(grid):
 
     for monomer_index in zip(*monomer_indices):
         monomer = grid[monomer_index]
-        for i, j in neighbour_indices(monomer_index):
-            neighbour_monomer = grid[i % N, j % N]
+        for i, j in neighbor_coordinates(N, *monomer_index):
+            neighbour_monomer = grid[i, j]
             if neighbour_monomer != monomer and neighbour_monomer != 0:  # i.e. not the same type or solvent
                 some_energy = np.sign(monomer) * np.sign(neighbour_monomer)
                 relative_energy += some_energy
