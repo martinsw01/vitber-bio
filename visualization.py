@@ -21,6 +21,7 @@ def create_plotter(axs=None):
 
     return update_plot
 
+
 #oppgave 1b
 def show_monomers(grid, M):
     """
@@ -28,5 +29,5 @@ def show_monomers(grid, M):
     """
     plt.figure(1)
     plt.pcolormesh(np.sign(grid)[::-1,])
-    plt.title(f"{M} monomers")
+    plt.title(f"{2*M} monomers")
     plt.show()
