@@ -3,7 +3,7 @@ import numpy as np
 
 from grid_creator import create_grid
 from montecarlo import monte_carlo
-from visualization import plot_energy_and_grid, create_plotter
+from visualization import plot_energy_and_grid, create_plotter, plot_mean_cluster_sizes
 
 
 # Oppgave 1f)
@@ -17,11 +17,11 @@ def simulate_monomers(N, M, N_s, T):
 # to see the animation.
 def simulate_monomers_with_visualizations(N, M, N_s, T):
     grid = create_grid(N, M)
-    _, _, _ = monte_carlo(grid, N_s, M, T, create_plotter())
+    _, _, _ = monte_carlo(grid, N_s, M, T, on_iteration=create_plotter())
 
 
 def t_equil(T, t_max, s, T_l, C):
-    return t_max * np.exp(-s * (T - T_l)) + C
+    return int(t_max * np.exp(-s * (T - T_l)) + C)
 
 
 # 1h)
@@ -33,25 +33,27 @@ def sim_mean_cluster_size():
     temperatures = np.linspace(T_l, T_h, 10)
     t_r = 1000
     C = 10_000
-    t_equil(temperatures, t_max, s, T_l, C)
     N = 15
     M = 25
     n = 100
-    mean_cluster_sizes = [monte_carlo(create_grid(N, M),
-                                      int(t_equil(T, t_max, s, T_l, C) + t_r * n),
-                                      M, T, n,
-                                      int(t_equil(T, t_max, s, T_l, C)),
-                                      t_r)[2]
-                          for T in temperatures]
-    plt.plot(temperatures, mean_cluster_sizes, linestyle="", marker="o")
-    plt.show()
+
+    results = [monte_carlo(grid=create_grid(N, M),
+                           N_s=t_equil(T, t_max, s, T_l, C) + t_r * n,
+                           M=M, T=T, n=n,
+                           t_equil=t_equil(T, t_max, s, T_l, C),
+                           t_r=t_r)
+               for T in temperatures]
+
+    mean_cluster_sizes = [mean_cluster_size for _, _, mean_cluster_size in results]
+    plot_mean_cluster_sizes(mean_cluster_sizes, temperatures)
+
 
 def main():
     T = [200, 500]
     N = 15
     M = 25
-    N_s = 500
-    # simulate_monomers_with_visualizations(15, 25, 5000, 500)
+    N_s = 50_000
+    # simulate_monomers_with_visualizations(M, N, N_s, T[0])
     simulate_monomers(N, M, N_s, T[0])
 
 

@@ -12,7 +12,7 @@ e = 1.60217662e-19  # [C]
 
 # 1 d)
 @njit
-def calc_energy(grid):
+def calc_relative_energy(grid):
     N = len(grid)
     monomer_indices = np.where(grid != 0)
     relative_energy = 0
@@ -24,4 +24,4 @@ def calc_energy(grid):
             if neighbour_monomer != monomer and neighbour_monomer != 0:  # i.e. not the same type or solvent
                 relative_energy += np.sign(monomer) * np.sign(neighbour_monomer)
 
-    return relative_energy * α / 2
+    return relative_energy
