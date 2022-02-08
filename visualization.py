@@ -22,7 +22,7 @@ def create_plotter(axs=None):
     return update_plot
 
 
-#oppgave 1b
+# oppgave 1b
 def show_monomers(grid, M):
     """
     Input is the grid (grid) as well as the number of monomers (M).
@@ -30,4 +30,11 @@ def show_monomers(grid, M):
     plt.figure(1)
     plt.pcolormesh(np.sign(grid)[::-1,])
     plt.title(f"{2*M} monomers")
+    plt.show()
+
+
+def plot_energy_and_grid(energy, final_grid):
+    ax1, ax2 = create_axs()
+    ax1.pcolormesh(final_grid[::-1, ])
+    ax2.plot(energy)
     plt.show()
