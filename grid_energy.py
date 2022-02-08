@@ -1,6 +1,7 @@
 import numpy as np
 
 from grid import neighbor_coordinates
+from numba import njit
 
 ε_r = 78  # [1] Relative permittivity
 ε_0 = 8.85418782e-12  # [m^-3 kg^-1 s^4 A^2] vacuum permittivity
@@ -10,6 +11,7 @@ e = 1.60217662e-19  # [C]
 
 
 # 1 d)
+@njit
 def calc_energy(grid):
     N = len(grid)
     monomer_indices = np.where(grid != 0)

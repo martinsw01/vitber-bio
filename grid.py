@@ -1,11 +1,14 @@
 import numpy as np
+from numba import njit
 
 
+@njit
 def neighbor_coordinates(N, i, j):
     neighbors = (((i - 1) % N, j), (i, (j - 1) % N), ((i + 1) % N, j), (i, (j + 1) % N))
     return neighbors
 
 
+@njit
 def choose_random_monomer(M):
     a = np.random.randint(-M, M)
     while not a:
@@ -16,19 +19,20 @@ def choose_random_monomer(M):
 directions = np.array([[-1, 0], [0, -1], [1, 0], [0, 1]])
 
 
+@njit
 def choose_random_direction():
     i = np.random.randint(0, 3)
     return directions[i]
 
 
+@njit
 def illegal_move(grid, monomer, direction):
     N = len(grid)
     monomer_location = np.where(grid == monomer)
-    if grid[(monomer_location[0][0] + direction[0]) % N, (monomer_location[1][0] + direction[1]) % N]:
-        return True
-    return False
+    return grid[(monomer_location[0][0] + direction[0]) % N, (monomer_location[1][0] + direction[1]) % N] != 0
 
 
+@njit
 def move_monomer(grid, monomer, direction):
     N = len(grid)
     new_grid = np.copy(grid)
@@ -39,19 +43,21 @@ def move_monomer(grid, monomer, direction):
 
 
 # 1 g)
+@njit
 def get_cluster_grid(grid):
-    N = len(grid)
-    cluster_grid = np.zeros((N, N))
-    monomer_positions = np.array(np.where(grid != 0)).T
-    for cluster, monomer_position in enumerate(monomer_positions, start=1):
-        if cluster_grid[tuple(monomer_position)] != 0:
-            continue
-        cluster_grid[tuple(monomer_position)] = cluster
-        add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
+    cluster_grid = np.zeros_like(grid)
+    monomer_positions = np.where(grid != 0)
+    cluster = 1
+    for monomer_position in zip(*monomer_positions):
+        if cluster_grid[tuple(monomer_position)] == 0:
+            cluster_grid[tuple(monomer_position)] = cluster
+            add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
+            cluster += 1
 
-    return cluster_grid
+    return cluster_grid, cluster
 
 
+@njit
 def add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_coordinate):
     N = len(grid)
     for neighbor_coordinate in neighbor_coordinates(N, *monomer_coordinate):
