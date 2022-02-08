@@ -38,6 +38,7 @@ def move_monomer(grid, monomer, direction):
     return new_grid
 
 
+# 1 g)
 def get_cluster_grid(grid):
     N = len(grid)
     cluster_grid = np.zeros((N, N))
@@ -46,14 +47,14 @@ def get_cluster_grid(grid):
         if cluster_grid[tuple(monomer_position)] != 0:
             continue
         cluster_grid[tuple(monomer_position)] = cluster
-        set_cluster(grid, cluster_grid, cluster, monomer_position)
+        add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
 
     return cluster_grid
 
 
-def set_cluster(grid, cluster_grid, cluster, monomer_coordinate):
+def add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_coordinate):
     N = len(grid)
     for neighbor_coordinate in neighbor_coordinates(N, *monomer_coordinate):
         if grid[neighbor_coordinate] != 0 and cluster_grid[neighbor_coordinate] == 0:
             cluster_grid[neighbor_coordinate] = cluster
-            set_cluster(grid, cluster_grid, cluster, neighbor_coordinate)
+            add_neighbours_to_cluster(grid, cluster_grid, cluster, neighbor_coordinate)
