@@ -47,12 +47,13 @@ def move_monomer(grid, monomer, direction):
 def get_cluster_grid(grid):
     cluster_grid = np.zeros_like(grid)
     monomer_positions = np.where(grid != 0)
-    cluster = 1
+    cluster = 0
     for monomer_position in zip(*monomer_positions):
         if cluster_grid[tuple(monomer_position)] == 0:
+            cluster += 1
             cluster_grid[tuple(monomer_position)] = cluster
             add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
-            cluster += 1
+
 
     return cluster_grid, cluster
 
