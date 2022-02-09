@@ -10,7 +10,7 @@ def is_legal_rigid_move(grid, polymer, attempted_new_positions):
 
 def rigid_move(grid, polymer, direction):
     monomer_positions = np.array(np.where(grid == polymer)).T
-    attempted_new_positions = monomer_positions + direction
+    attempted_new_positions = (monomer_positions + direction) % len(grid)
     if is_legal_rigid_move(grid, polymer, attempted_new_positions):
         new_grid = np.copy(grid)
         new_grid[monomer_positions] = 0
