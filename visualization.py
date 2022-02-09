@@ -7,6 +7,7 @@ def create_axs():
     return axs
 
 
+# Animation
 def create_plotter(axs=None):
     if axs is None:
         axs = create_axs()
@@ -22,7 +23,7 @@ def create_plotter(axs=None):
     return update_plot
 
 
-# oppgave 1b
+# oppgave 1b)
 def show_monomers(grid, M):
     """
     Input is the grid (grid) as well as the number of monomers (M).
@@ -33,8 +34,14 @@ def show_monomers(grid, M):
     plt.show()
 
 
+# Oppgave 1f)
 def plot_energy_and_grid(energy, final_grid):
     ax1, ax2 = create_axs()
     ax1.pcolormesh(final_grid[::-1, ])
     ax2.plot(energy)
+    plt.show()
+
+
+def plot_mean_cluster_sizes(mean_cluster_sizes, temperatures):
+    plt.plot(temperatures, mean_cluster_sizes)
     plt.show()
