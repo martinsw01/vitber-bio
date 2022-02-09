@@ -26,12 +26,22 @@ def rigid_move(grid, polymer, direction):
 #2 e)
 
 def medium_flexibility_move(grid, polymer, direction):
+    N = len(grid)
     monomer_positions = np.array(np.where(grid == polymer)).T
-    attempted_rigid_move = tuple((monomer_positions + direction).T % len(grid))
+    attempted_rigid_move = tuple((monomer_positions + direction).T % N)
     if is_legal_rigid_move(grid, polymer, attempted_rigid_move):
         return rigid_move(grid, polymer, direction)
     print("Is not legal rigid move")
-    print(monomer_positions)
+    frozen_monomers = np.array([])
     for coordinate in monomer_positions:
-        pass
+        print(coordinate+direction)
+        if grid[coordinate+direction % N] != 0 and grid[coordinate+direction % N] != polymer:
+            for coord in monomer_positions:
+                if direction[0]:
+                    if coord[0] == coordinate[0]:
+                        frozen_monomers = np.append(frozen_monomers, coord)
+                else:
+                    if coord[1] == coordinate[1]:
+                        frozen_monomers = np.append(frozen_monomers, coord)
+                        
 
