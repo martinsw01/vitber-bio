@@ -33,6 +33,12 @@ def show_monomers(grid, M):
     plt.title(f"{2*M} monomers")
     plt.show()
 
+def show_polymers(grid, num_of_polymers):
+    plt.figure(1)
+    plt.pcolormesh(grid[::-1, ]*10)
+    plt.title(f"{num_of_polymers} polymers")
+    plt.show()
+
 
 # Oppgave 1f)
 def plot_energy_and_grid(energy, final_grid):
