@@ -21,7 +21,7 @@ directions = np.array([[-1, 0], [0, -1], [1, 0], [0, 1]])
 
 @njit
 def choose_random_direction():
-    i = np.random.randint(0, 3)
+    i = np.random.randint(0, 4)
     return directions[i]
 
 
@@ -52,6 +52,7 @@ def get_cluster_grid(grid):
         if cluster_grid[monomer_position] == 0:
             cluster += 1
             cluster_grid[monomer_position] = cluster
+            add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
 
     return cluster_grid, cluster
 
