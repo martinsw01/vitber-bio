@@ -62,8 +62,7 @@ def simulation_with_polymers():
     N_s = 30_000
     grid = create_polymer_grid(N, M, L)
     final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=rigid_move, is_illegal_move=allways_false)
-    plt.pcolormesh(final_grid[::-1, ])
-    plt.show()
+    plot_energy_and_grid(final_grid, energy)
 
 
 def main():
