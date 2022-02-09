@@ -32,16 +32,28 @@ def medium_flexibility_move(grid, polymer, direction):
     if is_legal_rigid_move(grid, polymer, attempted_rigid_move):
         return rigid_move(grid, polymer, direction)
     print("Is not legal rigid move")
-    frozen_monomers = np.array([])
+    frozen_monomers = np.array([[-1, -1]])
+    new_grid = np.copy(grid)
     for coordinate in monomer_positions:
-        print(coordinate+direction)
-        if grid[coordinate+direction % N] != 0 and grid[coordinate+direction % N] != polymer:
+        print(coordinate)
+        value_at_new_position = grid[(coordinate[0]+direction[0]) % N, (coordinate[1] + direction[1]) %N]
+        if value_at_new_position != 0 and value_at_new_position != polymer:
             for coord in monomer_positions:
                 if direction[0]:
-                    if coord[0] == coordinate[0]:
-                        frozen_monomers = np.append(frozen_monomers, coord)
-                else:
                     if coord[1] == coordinate[1]:
-                        frozen_monomers = np.append(frozen_monomers, coord)
-                        
+                        frozen_monomers = np.append(frozen_monomers, [coord], axis=0)
+                else:
+                    if coord[0] == coordinate[0]:
+                        frozen_monomers = np.append(frozen_monomers, [coord], axis=0)
+    moving_monomers = np.array([])
+    print(frozen_monomers)
+    for coordinate in monomer_positions:
+        print(coordinate)
+        if coordinate not in frozen_monomers:
+            print("Hei")
+            new_grid[coordinate[0], coordinate[1]] = 0
+            moving_monomers = np.append(moving_monomers, coordinate)
+    for monomer in moving_monomers:
+        new_grid[(monomer[0] + direction[0]) % N, (monomer[1] + direction[1]) % N] = polymer
+    return new_grid
 
