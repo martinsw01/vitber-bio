@@ -1,5 +1,6 @@
 import numpy as np
 from numba import njit
+from grid import is_polymer_broken
 
 
 @njit
@@ -55,5 +56,7 @@ def medium_flexibility_move(grid, polymer, direction):
         new_grid[i, j] = 0
     for i, j in attempted_new_positions:
         new_grid[i, j] = polymer
+    if is_polymer_broken(new_grid, polymer):
+        return grid
     return new_grid
 

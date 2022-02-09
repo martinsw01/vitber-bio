@@ -64,3 +64,22 @@ def add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_coordinate):
         if grid[neighbor_coordinate] != 0 and cluster_grid[neighbor_coordinate] == 0:
             cluster_grid[neighbor_coordinate] = cluster
             add_neighbours_to_cluster(grid, cluster_grid, cluster, neighbor_coordinate)
+
+
+# 2 f)
+@njit
+def is_polymer_broken(grid, polymer):
+    N = len(grid)
+    monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if grid[i, j] == polymer])
+    for monomer in monomer_positions:
+        is_monomer_alone = False
+        neighbor_coord = neighbor_coordinates(N, monomer[0], monomer[1])
+        for neighbor in neighbor_coord:
+            if grid[neighbor]==polymer:
+                is_monomer_alone = False
+                break
+            else:
+                is_monomer_alone=True
+        if is_monomer_alone:
+            return True
+    return False
