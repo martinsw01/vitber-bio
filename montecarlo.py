@@ -3,7 +3,7 @@ import random
 import numpy as np
 from numba import njit
 
-from grid import choose_random_direction, choose_random_monomer, illegal_move, move_monomer, get_cluster_grid
+from grid import choose_random_direction, choose_random_polymer, illegal_move, move_monomer, get_cluster_grid
 from grid_energy import calc_relative_energy, α
 
 
@@ -22,19 +22,26 @@ def should_measure(t, t_equil, t_r):
 
 
 @njit
-def choose_random_legal_move(grid, M):
-    random_monomer = choose_random_monomer(M)
+def choose_random_legal_move(grid, M, is_illegal_move=illegal_move):
+    random_monomer = choose_random_polymer(M)
     random_direction = choose_random_direction()
-    while illegal_move(grid, random_monomer, random_direction):
-        random_monomer = choose_random_monomer(M)
+    while is_illegal_move(grid, random_monomer, random_direction):
+        random_monomer = choose_random_polymer(M)
         random_direction = choose_random_direction()
     return random_monomer, random_direction
 
 
+@njit
+def move_random_polymer(grid, M, is_illegal_move, move_polymer):
+    random_polymer, random_direction = choose_random_legal_move(grid, M, is_illegal_move)
+    return move_polymer(grid, random_polymer, random_direction)
+
+
 # 1 e)
 @njit
-def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf, on_iteration=do_nothing):
-    epsilon = np.full(N_s, -69)
+def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
+                is_illegal_move=illegal_move, move_polymer=move_monomer, on_iteration=do_nothing):
+    epsilon = np.zeros(N_s)
     beta = 1 / (T * 1.380649e-23) * α / 2
 
     cluster_sizes = np.zeros(n)
@@ -43,9 +50,7 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf, on_iteration=d
     for t in range(N_s):
         rel_energy = calc_relative_energy(grid)
 
-        rand_monomer, rand_direction = choose_random_legal_move(grid, M)
-
-        new_grid = move_monomer(grid, rand_monomer, rand_direction)
+        new_grid = move_random_polymer(grid, M, is_illegal_move, move_polymer)
         new_rel_energy = calc_relative_energy(new_grid)
 
         if new_rel_energy < rel_energy or thermal_fluctuation(new_rel_energy, rel_energy, beta):
@@ -61,5 +66,8 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf, on_iteration=d
 
         if t % 100 == 1:
             on_iteration(grid, epsilon[:t])
+
+    if t_r == np.inf:
+        return grid, epsilon, 0
 
     return grid, epsilon, np.mean(cluster_sizes[:measure_index])

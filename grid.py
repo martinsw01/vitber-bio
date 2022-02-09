@@ -9,7 +9,7 @@ def neighbor_coordinates(N, i, j):
 
 
 @njit
-def choose_random_monomer(M):
+def choose_random_polymer(M):
     a = np.random.randint(-M, M)
     while not a:
         a = np.random.randint(-M, M)
@@ -49,11 +49,9 @@ def get_cluster_grid(grid):
     monomer_positions = np.where(grid != 0)
     cluster = 0
     for monomer_position in zip(*monomer_positions):
-        if cluster_grid[tuple(monomer_position)] == 0:
+        if cluster_grid[monomer_position] == 0:
             cluster += 1
-            cluster_grid[tuple(monomer_position)] = cluster
-            add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_position)
-
+            cluster_grid[monomer_position] = cluster
 
     return cluster_grid, cluster
 
