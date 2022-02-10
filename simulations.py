@@ -3,8 +3,8 @@ from numba import njit
 
 from grid_creator import create_grid, create_polymer_grid
 from montecarlo import monte_carlo
-from move import rigid_move
-from visualization import plot_energy_and_grid, create_plotter, plot_mean_cluster_sizes
+from move import rigid_move, medium_flexibility_move
+from visualization import plot_energy_and_grid, create_plotter, plot_mean_cluster_sizes, plot_mean_cluster_sizes_per_L
 
 
 # Oppgave 1f)
@@ -64,6 +64,33 @@ def simulation_with_polymers():
     final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=rigid_move, is_illegal_move=allways_false)
     plot_energy_and_grid(final_grid, energy)
 
+# 2 g)
+def simulation_with_polymers_using_medium_flexibility():
+    N = 30
+    L = 13
+    M = 6
+    T = 200
+    N_s = 30_000
+    grid = create_polymer_grid(N, M, L)
+    final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=medium_flexibility_move, is_illegal_move=allways_false)
+    plot_energy_and_grid(final_grid, energy)
+
+# 2 h)
+def calculate_expected_values():
+    T = 300
+    t_r = 1000
+    N = 30
+    M = 5
+    N_s = 30_000
+    mean_cluster_sizes_per_L = np.zeros(13)
+    L = [i for i in range(3, 42, 3)]
+
+    for i in range(13):
+        grid = create_polymer_grid(N, M, L[i])
+        final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=medium_flexibility_move, is_illegal_move=allways_false)
+        mean_cluster_sizes_per_L[i] = _ / L[i]
+    plot_mean_cluster_sizes_per_L(mean_cluster_sizes_per_L, L)
+
 
 def main():
     T = [200, 500]
@@ -72,7 +99,6 @@ def main():
     N_s = 50_000
     # simulate_monomers_with_visualizations(M, N, N_s, T[0])
     simulate_monomers(N, M, N_s, T[0])
-
 
 if __name__ == "__main__":
     sim_mean_cluster_size()

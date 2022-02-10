@@ -51,3 +51,7 @@ def plot_energy_and_grid(energy, final_grid):
 def plot_mean_cluster_sizes(mean_cluster_sizes, temperatures):
     plt.plot(temperatures, mean_cluster_sizes)
     plt.show()
+
+def plot_mean_cluster_sizes_per_L(mean_cluster_sizes_per_L, L):
+    plt.plot(L, mean_cluster_sizes_per_L)
+    plt.show()
