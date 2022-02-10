@@ -72,8 +72,10 @@ def simulation_with_polymers_using_medium_flexibility():
     T = 200
     N_s = 30_000
     grid = create_polymer_grid(N, M, L)
-    final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=medium_flexibility_move, is_illegal_move=allways_false)
-    plot_energy_and_grid(final_grid, energy)
+    final_grid, energy, _ = monte_carlo(grid, N_s, M, T,
+                                        move_polymer=medium_flexibility_move,
+                                        is_illegal_move=allways_false)
+    plot_energy_and_grid(energy, final_grid)
 
 # 2 h)
 def calculate_expected_values():
