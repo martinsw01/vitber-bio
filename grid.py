@@ -71,7 +71,16 @@ def add_neighbours_to_cluster(grid, cluster_grid, cluster, monomer_coordinate):
 def is_polymer_broken(grid, polymer):
     N = len(grid)
     monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if grid[i, j] == polymer])
-    for monomer in monomer_positions:
+
+    new_grid = return_cluster(grid, monomer_positions[0][0], monomer_positions[0][1], polymer)
+    new_monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if new_grid[i, j] == -polymer])
+
+    if len(monomer_positions) == len(new_monomer_positions):
+        return False
+    return True
+
+
+"""for monomer in monomer_positions:
         is_monomer_alone = False
         neighbor_coord = neighbor_coordinates(N, monomer[0], monomer[1])
         for neighbor in neighbor_coord:
@@ -82,4 +91,18 @@ def is_polymer_broken(grid, polymer):
                 is_monomer_alone=True
         if is_monomer_alone:
             return True
-    return False
+    return False"""
+
+
+@njit
+def return_cluster(grid, i, j, polymer):
+    N = len(grid)
+    neighbours = neighbor_coordinates(N, i, j)
+
+    for neighbour in neighbours:
+        if grid[neighbour[0], neighbour[1]] == polymer:
+            grid[neighbour[0], neighbour[1]] = -polymer
+            grid = return_cluster(grid, neighbour[0], neighbour[1], polymer)
+    return grid
+
+

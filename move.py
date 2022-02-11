@@ -56,7 +56,8 @@ def medium_flexibility_move(grid, polymer, direction):
         new_grid[i, j] = 0
     for i, j in attempted_new_positions:
         new_grid[i, j] = polymer
-    if is_polymer_broken(new_grid, polymer):
+    check_grid = np.copy(new_grid)
+    if is_polymer_broken(check_grid, polymer):
         return grid
     return new_grid
 
