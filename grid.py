@@ -72,7 +72,10 @@ def is_polymer_broken(grid, polymer):
     N = len(grid)
     monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if grid[i, j] == polymer])
 
-    new_grid = return_cluster(grid, monomer_positions[0][0], monomer_positions[0][1], polymer)
+    clean_grid = np.zeros((N, N))
+    for monomer in zip(monomer_positions):
+        clean_grid[monomer] = polymer
+    new_grid = return_cluster(clean_grid, monomer_positions[0][0], monomer_positions[0][1], polymer)
     new_monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if new_grid[i, j] == -polymer])
 
     if len(monomer_positions) == len(new_monomer_positions):
