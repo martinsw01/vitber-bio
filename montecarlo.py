@@ -3,13 +3,13 @@ import random
 import numpy as np
 from numba import njit
 
-from grid import choose_random_direction, choose_random_polymer, get_cluster_grid
+from grid import choose_random_direction, choose_random_polymer
 from move import move_monomer, illegal_move
 from grid_energy import calc_relative_energy, α
 
 
 @njit
-def do_nothing(*args): pass
+def do_nothing(*args): return 0
 
 
 @njit
@@ -19,7 +19,7 @@ def thermal_fluctuation(new_energy, energy, beta):
 
 @njit
 def should_measure(t, t_equil, t_r):
-    return (t - t_equil) > 0 and (t - t_equil) % t_r == 0
+    return (t - t_equil) >= 0 and (t - t_equil) % t_r == 0
 
 
 @njit
@@ -41,11 +41,11 @@ def move_random_polymer(grid, M, is_illegal_move, move_polymer):
 # 1 e)
 @njit
 def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
-                is_illegal_move=illegal_move, move_polymer=move_monomer, on_iteration=do_nothing):
-    epsilon = np.zeros(N_s)
+                is_illegal_move=illegal_move, move_polymer=move_monomer, make_measurement=do_nothing):
+    energy_profile = np.zeros(N_s)
     beta = 1 / (T * 1.380649e-23) * α / 2
 
-    number_of_clusters = np.zeros(n)
+    measurements = np.zeros(n)
     measure_index = 0
 
     for t in range(N_s):
@@ -58,17 +58,10 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
             grid = new_grid
             rel_energy = new_rel_energy
 
-        epsilon[t] = rel_energy
+        energy_profile[t] = rel_energy
 
         if should_measure(t, t_equil, t_r):
-            _, m = get_cluster_grid(grid)
-            number_of_clusters[measure_index] = m
+            measurements[measure_index] = make_measurement(grid)
             measure_index += 1
 
-        if t % 100 == 1:
-            on_iteration(grid, epsilon[:t])
-
-    if t_r == np.inf:
-        return grid, epsilon, None
-
-    return grid, epsilon, number_of_clusters
+    return grid, energy_profile, measurements
