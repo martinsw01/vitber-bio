@@ -34,8 +34,9 @@ def show_monomers(grid, M):
     plt.show()
 
 
-def show_polymers(grid, num_of_polymers):
+def show_polymers(grid, num_of_polymers, title="Plot of polymers"):
     plt.figure(1)
+    plt.title(title)
     plt.pcolormesh(grid[::-1, ] * 10)
     plt.title(f"{num_of_polymers} polymers")
     plt.show()
@@ -66,4 +67,12 @@ def plot_measurements(measurements, L):
         ax.plot(L, mean)
         ax.errorbar(L, mean, std, marker='^', )
     plt.tight_layout()
+    plt.show()
+
+
+def plot_two_energies(energy1, energy2, name_energy1, name_energy2):
+    plt.figure(1)
+    plt.title(f"{name_energy1} vs {name_energy2}")
+    plt.plot(energy1, label=name_energy1)
+    plt.plot(energy2, label=name_energy2)
     plt.show()

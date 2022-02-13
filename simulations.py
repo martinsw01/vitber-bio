@@ -7,7 +7,7 @@ from grid import measure_number_of_clusters
 from grid_creator import create_grid, create_polymer_grid
 from montecarlo import monte_carlo
 from move import rigid_move, medium_flexibility_move
-from visualization import plot_energy_and_grid, create_plotter, plot_measurements
+from visualization import plot_energy_and_grid, create_plotter, plot_measurements, plot_two_energies, show_polymers
 
 
 # Oppgave 1f)
@@ -84,6 +84,26 @@ def simulation_with_polymers_using_medium_flexibility():
                                         move_polymer=medium_flexibility_move,
                                         is_illegal_move=always_false)
     plot_energy_and_grid(energy, final_grid)
+
+
+def compare_medium_flexibility_with_rigid_move():
+    N = 30
+    L = 13
+    M = 6
+    T = 200
+    N_s = 30_000
+    grid = create_polymer_grid(N, M, L)
+    final_grid_medium_flex, energy_medium_flex, _ = monte_carlo(grid, N_s, M, T,
+                                                                move_polymer=medium_flexibility_move,
+                                                                is_illegal_move=always_false)
+    final_grid_rigid, energy_rigid, _ = monte_carlo(grid, N_s, M, T,
+                                                    move_polymer=rigid_move,
+                                                    is_illegal_move=always_false)
+
+    plot_two_energies(energy_rigid, energy_medium_flex, "Rigid move", "Medium flexible move")
+    show_polymers(final_grid_medium_flex, title="Medium flexible move")
+    show_polymers(final_grid_rigid, title="Rigid move")
+
 
 
 # 2 h)
@@ -180,15 +200,11 @@ def main():
 if __name__ == "__main__":
     # simulation_with_polymers()
     # simulation_with_polymers_using_medium_flexibility()
-    calculate_expected_values()
-    load_2h_and_plot()
+    # calculate_expected_values()
+    #load_2h_and_plot()
     # check_std_deviation()
     # sim_mean_cluster_size()
     # main()
     # decide_number_of_samples()
 
-    # n = np.array([5, 10, 15, 25, 50, 75, 100, 200, 300, 400, 500])
-    # plt.figure(1)
-    # for i in range(7, 12):
-    #     data = np.load(f"find_n_{i}_samples.npz")
-    #     plot()
+    compare_medium_flexibility_with_rigid_move()
