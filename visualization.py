@@ -61,11 +61,13 @@ titles = ["Cluster sizes per polymer size", "Number of clusters"]
 
 def plot_measurements(measurements, L):
     _, axs = plt.subplots(len(measurements))
+    if not isinstance(axs, np.ndarray):
+        axs = [axs]
     for (mean, std), title, ax in zip(measurements, titles, axs):
         ax.set_title(title)
         ax.set_xlabel("L")
         ax.plot(L, mean)
-        ax.errorbar(L, mean, std, marker='^', )
+        ax.errorbar(L, mean, std, marker='^', color="C0")
     plt.tight_layout()
     plt.show()
 
