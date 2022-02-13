@@ -84,14 +84,17 @@ def calculate_expected_values():
     N = 30
     M = 5
     N_s = 30_000
+    n=100 # todoo: decide n
+    t_eq = 100 # todoo: decide t_eq
     mean_cluster_sizes_per_L = np.zeros(13)
-    L = [i for i in range(3, 42, 3)]
+    polymer_sizes = [i for i in range(3, 42, 3)]
 
     for i in range(13):
-        grid = create_polymer_grid(N, M, L[i])
-        final_grid, energy, _ = monte_carlo(grid, N_s, M, T, move_polymer=medium_flexibility_move, is_illegal_move=allways_false)
-        mean_cluster_sizes_per_L[i] = _ / L[i]
-    plot_mean_cluster_sizes_per_L(mean_cluster_sizes_per_L, L)
+        print(i)
+        grid = create_polymer_grid(N, M, polymer_sizes[i])
+        final_grid, energy, mean_grid_size = monte_carlo(grid, N_s, M, T, n=n, t_equil=t_eq, t_r=t_r, move_polymer=medium_flexibility_move, is_illegal_move=allways_false)
+        mean_cluster_sizes_per_L[i] = mean_grid_size / polymer_sizes[i]
+    plot_mean_cluster_sizes_per_L(mean_cluster_sizes_per_L, polymer_sizes)
 
 
 def main():
