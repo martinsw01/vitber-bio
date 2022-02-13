@@ -127,19 +127,20 @@ def load_2h_and_plot():
 
     for i in range(1):
         data = np.load(f"oppgave2h_L_{polymer_sizes[i]}.npz")
-        energy = data["energy"]
-        # plt.plot(energy)
         number_of_clusters = data["number_of_clusters"]
-        plt.plot(number_of_clusters)
-        mean_number_of_clusters = np.mean(number_of_clusters)
         monomers_in_grid = 2 * M * polymer_sizes[i]
         cluster_sizes = monomers_in_grid / number_of_clusters
+
+        mean_number_of_clusters = np.mean(number_of_clusters)
+        mean_cluster_size = np.mean(cluster_sizes)
         number_of_clusters_std = np.std(number_of_clusters)
         cluster_sizes_std = np.std(cluster_sizes)
-        mean_cluster_sizes_per_L_array[i] = mean_number_of_clusters / polymer_sizes[i]
+
+        mean_cluster_sizes_per_L_array[i] = mean_cluster_size / polymer_sizes[i]
         mean_number_of_clusters[i] = mean_number_of_clusters
-        std_cluster_size_per_L_array[i] = cluster_sizes_std
+        std_cluster_size_per_L_array[i] = cluster_sizes_std/polymer_sizes[i]
         std_number_of_clusters_array[i] = number_of_clusters_std
+
     plot_measurements([(mean_cluster_sizes_per_L_array, std_number_of_clusters_array),
                        (mean_number_of_clusters, std_cluster_size_per_L_array)], polymer_sizes)
 
