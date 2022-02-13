@@ -5,9 +5,9 @@ from numba import njit
 
 ε_r = 78  # [1] Relative permittivity
 ε_0 = 8.85418782e-12  # [m^-3 kg^-1 s^4 A^2] vacuum permittivity
-a = 23e-6  # [m] Distance between grid points (23 microns)
+a = 23e-6 ** 2  # [m] Distance between grid points (23 microns)
 e = 1.60217662e-19  # [C]
-α = e ** 2 / (4 * np.pi * ε_r * ε_0 * a ** 2)
+α = e ** 2 / (4 * np.pi * ε_r * ε_0 * a)
 
 
 # 1 d)
