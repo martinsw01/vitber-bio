@@ -66,20 +66,6 @@ def is_polymer_broken(grid, polymer):
     return True
 
 
-"""for monomer in monomer_positions:
-        is_monomer_alone = False
-        neighbor_coord = neighbor_coordinates(N, monomer[0], monomer[1])
-        for neighbor in neighbor_coord:
-            if grid[neighbor]==polymer:
-                is_monomer_alone = False
-                break
-            else:
-                is_monomer_alone=True
-        if is_monomer_alone:
-            return True
-    return False"""
-
-
 @njit
 def return_cluster(grid, i, j, polymer):
     N = len(grid)
@@ -91,4 +77,9 @@ def return_cluster(grid, i, j, polymer):
             grid = return_cluster(grid, neighbour[0], neighbour[1], polymer)
     return grid
 
+
+@njit
+def measure_number_of_clusters(grid):
+    _, number_of_clusters = get_cluster_grid(grid)
+    return number_of_clusters
 

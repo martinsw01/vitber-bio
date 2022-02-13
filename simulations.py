@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numba import njit
 
+from grid import measure_number_of_clusters
 from grid_creator import create_grid, create_polymer_grid
 from montecarlo import monte_carlo
 from move import rigid_move, medium_flexibility_move
@@ -44,10 +45,11 @@ def sim_mean_cluster_size():
                            N_s=t_equil(T, t_max, s, T_l, C) + t_r * n,
                            M=M, T=T, n=n,
                            t_equil=t_equil(T, t_max, s, T_l, C),
-                           t_r=t_r)
+                           t_r=t_r,
+                           make_measurement=measure_number_of_clusters)
                for T in temperatures]
 
-    cluster_sizes = [2 * M / measurements for _, _, measurements in results]
+    cluster_sizes = [2 * M / number_of_clusters for _, _, number_of_clusters in results]
     mean_cluster_sizes = [np.mean(m) for m in cluster_sizes]
     std_devs = [np.std(m) for m in cluster_sizes]
     plot_measurements([(mean_cluster_sizes, std_devs)], temperatures)
@@ -103,7 +105,8 @@ def calculate_expected_values():
         print(i)
         grid = create_polymer_grid(N, M, polymer_sizes[i])
         _, energy, number_of_clusters = monte_carlo(grid, N_s, M, T, n=n, t_equil=t_eq, t_r=t_r,
-                                                    move_polymer=medium_flexibility_move, is_illegal_move=always_false)
+                                                    move_polymer=medium_flexibility_move, is_illegal_move=always_false,
+                                                    make_measurement=measure_number_of_clusters)
         np.savez(f"oppgave2h_L_{polymer_sizes[i]}.npz", energy=energy, number_of_clusters=number_of_clusters)
         mean_number_of_clusters = np.mean(number_of_clusters)
         monomers = 2 * M * polymer_sizes[i]
@@ -120,7 +123,7 @@ def calculate_expected_values():
 def load_2h_and_plot():
     mean_cluster_sizes_per_L_array = np.zeros(1)
     std_cluster_size_per_L_array = np.zeros(1)
-    mean_number_of_clusters = np.zeros(1)
+    mean_number_of_clusters_array = np.zeros(1)
     std_number_of_clusters_array = np.zeros(1)
     polymer_sizes = np.linspace(13, 39, 3, dtype=int)[:1]
     M = 5
@@ -137,12 +140,12 @@ def load_2h_and_plot():
         cluster_sizes_std = np.std(cluster_sizes)
 
         mean_cluster_sizes_per_L_array[i] = mean_cluster_size / polymer_sizes[i]
-        mean_number_of_clusters[i] = mean_number_of_clusters
+        mean_number_of_clusters_array[i] = mean_number_of_clusters
         std_cluster_size_per_L_array[i] = cluster_sizes_std/polymer_sizes[i]
         std_number_of_clusters_array[i] = number_of_clusters_std
 
     plot_measurements([(mean_cluster_sizes_per_L_array, std_number_of_clusters_array),
-                       (mean_number_of_clusters, std_cluster_size_per_L_array)], polymer_sizes)
+                       (mean_number_of_clusters_array, std_cluster_size_per_L_array)], polymer_sizes)
 
 
 
@@ -157,7 +160,8 @@ def decide_number_of_samples():
     N_s = n * t_r + t_eq
     grid = create_polymer_grid(N, M, L)
     _, energy, measurements = monte_carlo(grid, N_s, M, T, n=n, t_equil=t_eq, t_r=t_r,
-                                          move_polymer=medium_flexibility_move, is_illegal_move=always_false)
+                                          move_polymer=medium_flexibility_move, is_illegal_move=always_false,
+                                          make_measurement=measure_number_of_clusters)
     np.savez(f"find_n_1000_samples.npz", energy=energy, measurements=measurements)
 
 
