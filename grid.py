@@ -10,9 +10,9 @@ def neighbor_coordinates(N, i, j):
 
 @njit
 def choose_random_polymer(M):
-    a = np.random.randint(-M, M)
+    a = np.random.randint(-M, M+1)
     while not a:
-        a = np.random.randint(-M, M)
+        a = np.random.randint(-M, M+1)
     return a
 
 
