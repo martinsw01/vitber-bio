@@ -44,7 +44,7 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
     epsilon = np.zeros(N_s)
     beta = 1 / (T * 1.380649e-23) * α / 2
 
-    cluster_sizes = np.zeros(n)
+    number_of_clusters = np.zeros(n)
     measure_index = 0
 
     for t in range(N_s):
@@ -60,14 +60,14 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
         epsilon[t] = rel_energy
 
         if should_measure(t, t_equil, t_r):
-            _, d = get_cluster_grid(grid)
-            cluster_sizes[measure_index] = 2 * M / d
+            _, m = get_cluster_grid(grid)
+            number_of_clusters[measure_index] = m
             measure_index += 1
 
         if t % 100 == 1:
             on_iteration(grid, epsilon[:t])
 
     if t_r == np.inf:
-        return grid, epsilon, 0
+        return grid, epsilon, None
 
-    return grid, epsilon, np.mean(cluster_sizes[:measure_index])
+    return grid, epsilon, number_of_clusters[:measure_index]
