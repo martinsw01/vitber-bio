@@ -145,6 +145,38 @@ def load_2h_and_plot():
 
 
 
+def decide_number_of_samples():
+    T = 300
+    t_r = 1000
+    N = 30
+    M = 5
+    L = 13
+    n = 1000
+    t_eq = 5_000
+    N_s = n * t_r + t_eq
+    grid = create_polymer_grid(N, M, L)
+    _, energy, measurements = monte_carlo(grid, N_s, M, T, n=n, t_equil=t_eq, t_r=t_r,
+                                          move_polymer=medium_flexibility_move, is_illegal_move=always_false)
+    np.savez(f"find_n_1000_samples.npz", energy=energy, measurements=measurements)
+
+
+def check_std_deviation():
+    L = 13
+    data = np.load("find_n_1000_samples.npz")
+    energy = data["energy"]
+    measurements = data["measurements"] / L
+    standard_deviation = np.zeros(500)
+    sample_list = np.linspace(1, 1000, 500, dtype=int)
+    for index, value in enumerate(sample_list):
+        result = measurements[:value]
+        standard_deviation[index] = np.std(result)
+    plt.figure(1)
+    plt.plot(sample_list, standard_deviation)
+    plt.xlabel("Antall målinger")
+    plt.ylabel("Standardavvik")
+    plt.show()
+
+
 def main():
     T = [200, 500]
     N = 15

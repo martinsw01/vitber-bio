@@ -71,4 +71,4 @@ def monte_carlo(grid, N_s, M, T, n=0, t_equil=np.inf, t_r=np.inf,
     if t_r == np.inf:
         return grid, epsilon, None
 
-    return grid, epsilon, number_of_clusters[:measure_index]
+    return grid, epsilon, number_of_clusters
