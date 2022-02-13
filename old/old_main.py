@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 from old_montecarlo import monte_carlo
 from old_grid_creator import create_grid
@@ -12,9 +13,9 @@ def main():
     final_grid, mean_grid, energy_profile = monte_carlo(grid, grid_parameters, t_equil=50_000, t_r=10, n=10,
                                                         on_iteration=create_plotter())
     _, (ax1, ax2, ax3) = plt.subplots(3)
-    ax1.pcolormesh(final_grid)
+    ax1.pcolormesh(np.sign(final_grid))
     ax2.pcolormesh(mean_grid)
-    ax3.plot(energy_profile)
+    ax3.plot([E for E in energy_profile if abs(E) < 100])
 
     plt.show()
 

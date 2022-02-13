@@ -45,8 +45,13 @@ def create_polymer_grid(N, M, L):
         monomer_positions[0] = rand_position
 
         for j in range(1, L):
-            neighbor_positon = random_available_neighbor_position(grid, monomer_positions[:j])
-            grid[neighbor_positon] = polymer
-            monomer_positions[j] = neighbor_positon
+            try:
+                neighbor_position = random_available_neighbor_position(grid, monomer_positions[:j])
+                grid[neighbor_position] = polymer
+                monomer_positions[j] = neighbor_position
+            except ValueError as e:
+                print(f"Failed to create an {N}x{N} grid with {M} polymers, each containing {L} monomers: ", e)
+                print("Retrying ...")
+                return create_polymer_grid(N, M, L)
 
     return grid
