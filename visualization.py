@@ -77,4 +77,5 @@ def plot_two_energies(energy1, energy2, name_energy1, name_energy2):
     plt.title(f"{name_energy1} vs {name_energy2}")
     plt.plot(energy1, label=name_energy1)
     plt.plot(energy2, label=name_energy2)
+    plt.legend()
     plt.show()
