@@ -31,7 +31,7 @@ def rigid_move(grid, polymer, direction):
         return grid
 
 
-#2 e)
+# 2 e)
 @njit
 def medium_flexibility_move(grid, polymer, direction):
     N = len(grid)
@@ -61,3 +61,19 @@ def medium_flexibility_move(grid, polymer, direction):
         return grid
     return new_grid
 
+
+@njit
+def move_monomer(grid, monomer, direction):
+    N = len(grid)
+    new_grid = np.copy(grid)
+    monomer_location = np.where(grid == monomer)
+    new_grid[monomer_location[0][0], monomer_location[1][0]] = 0
+    new_grid[(monomer_location[0][0] + direction[0]) % N, (monomer_location[1][0] + direction[1]) % N] = monomer
+    return new_grid
+
+
+@njit
+def illegal_move(grid, monomer, direction):
+    N = len(grid)
+    monomer_location = np.where(grid == monomer)
+    return grid[(monomer_location[0][0] + direction[0]) % N, (monomer_location[1][0] + direction[1]) % N] != 0

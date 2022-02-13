@@ -3,7 +3,8 @@ import random
 import numpy as np
 from numba import njit
 
-from grid import choose_random_direction, choose_random_polymer, illegal_move, move_monomer, get_cluster_grid
+from grid import choose_random_direction, choose_random_polymer, get_cluster_grid
+from move import move_monomer, illegal_move
 from grid_energy import calc_relative_energy, α
 
 

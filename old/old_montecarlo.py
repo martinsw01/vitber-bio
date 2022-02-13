@@ -33,14 +33,14 @@ def monte_carlo(grid, grid_parameters, t_equil, t_r, n, on_iteration=do_nothing)
     grids_index = 0
 
     for i in range(N_s):
-        energy = calc_energy(grid)
+        energy, _ = calc_energy(grid)
         rand_polymer = choose_random_polymer(M)
         rand_direction = choose_random_direction()
         if is_illegal_move(grid, rand_polymer, rand_direction):
             continue
         else:
             new_grid = move_polymer(grid, rand_polymer, rand_direction)
-            new_energy = calc_energy(grid)
+            new_energy, _ = calc_energy(grid)
             if new_energy < energy or thermal_fluctuations(new_energy, energy, T=273):
                 energy = new_energy
                 grid = new_grid

@@ -30,13 +30,6 @@ def random_element(lst, high=np.inf):
     return lst[i]
 
 
-def get_random_neighbour_position(grid, monomer_position):
-    N = len(grid)
-    neighborhood = (monomer_position + neighborhood_add_indices) % N
-    valid_positions = [(i, j) for i, j in neighborhood if grid[i, j] == 0]
-    return random_element(valid_positions)
-
-
 def random_available_position(grid):
     available_positions = np.where(grid == 0)
     i = np.random.randint(len(grid))
