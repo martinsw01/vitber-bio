@@ -52,7 +52,8 @@ def sim_mean_cluster_size():
     cluster_sizes = [2 * M / number_of_clusters for _, _, number_of_clusters in results]
     mean_cluster_sizes = [np.mean(m) for m in cluster_sizes]
     std_devs = [np.std(m) for m in cluster_sizes]
-    plot_measurements([(mean_cluster_sizes, std_devs)], temperatures)
+    plot_measurements([(mean_cluster_sizes, std_devs)], x=temperatures,
+                      titles=["Mean cluster sizes"], xlabel="Temperature", ylabels=["Cluster size"])
 
 
 @njit
@@ -104,9 +105,8 @@ def compare_medium_flexibility_with_rigid_move():
     show_polymers(final_grid_rigid, title="Rigid move")
 
 
-
 # 2 h)
-def calculate_expected_values():
+def do_measurements_on_multiple_L_and_save():
     T = 300
     t_r = 1_000
     N = 30
@@ -146,12 +146,13 @@ def load_2h_and_plot():
 
         mean_cluster_sizes_per_L_array[i] = mean_cluster_size / polymer_sizes[i]
         mean_number_of_clusters_array[i] = mean_number_of_clusters
-        std_cluster_size_per_L_array[i] = cluster_sizes_std/polymer_sizes[i]
+        std_cluster_size_per_L_array[i] = cluster_sizes_std / polymer_sizes[i]
         std_number_of_clusters_array[i] = number_of_clusters_std
 
     plot_measurements([(mean_cluster_sizes_per_L_array, std_number_of_clusters_array),
-                       (mean_number_of_clusters_array, std_cluster_size_per_L_array)], polymer_sizes)
-
+                       (mean_number_of_clusters_array, std_cluster_size_per_L_array)],
+                      x=polymer_sizes, titles=["Mean cluster sizes per L", "Mean number of clusters"],
+                      xlabel="Polymer size", ylabels=["Cluster size per L", "Number of clusters"])
 
 
 def decide_number_of_samples():
@@ -200,10 +201,10 @@ if __name__ == "__main__":
     # simulation_with_polymers()
     # simulation_with_polymers_using_medium_flexibility()
     # calculate_expected_values()
-    #load_2h_and_plot()
+    load_2h_and_plot()
     # check_std_deviation()
     # sim_mean_cluster_size()
     # main()
     # decide_number_of_samples()
 
-    compare_medium_flexibility_with_rigid_move()
+    # compare_medium_flexibility_with_rigid_move()

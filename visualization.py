@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def create_axs():
@@ -56,18 +57,16 @@ def plot_mean_cluster_sizes(mean_cluster_sizes, std_devs, temperatures):
     plt.show()
 
 
-titles = ["Cluster sizes per polymer size", "Number of clusters"]
-
-
-def plot_measurements(measurements, L):
+def plot_measurements(measurements, x, titles, xlabel, ylabels):
     _, axs = plt.subplots(len(measurements))
     if not isinstance(axs, np.ndarray):
         axs = [axs]
-    for (mean, std), title, ax in zip(measurements, titles, axs):
+    for (mean, std), title, ylabel, ax in zip(measurements, titles, ylabels, axs):
         ax.set_title(title)
-        ax.set_xlabel("L")
-        ax.plot(L, mean)
-        ax.errorbar(L, mean, std, marker='^', color="C0")
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.plot(x, mean)
+        ax.errorbar(x, mean, std, marker='^', color="C0")
     plt.tight_layout()
     plt.show()
 
