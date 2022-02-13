@@ -114,7 +114,7 @@ def do_measurements_on_multiple_L_and_save():
     n = 400
     t_eq = 5_000
     N_s = n * t_r + t_eq
-    polymer_sizes = np.linspace(13, 39, 13, dtype=int)
+    polymer_sizes = np.linspace(3, 39, 13, dtype=int)
 
     for i in range(13):
         print(i)
