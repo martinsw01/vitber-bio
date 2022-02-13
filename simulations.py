@@ -95,40 +95,26 @@ def calculate_expected_values():
     n = 400
     t_eq = 5_000
     N_s = n * t_r + t_eq
-    mean_cluster_sizes_per_L = np.zeros(13)
-    mean_m = np.zeros(13)
-    std_m = np.zeros(13)
-    std_d_per_L = np.zeros(13)
-    polymer_sizes = np.linspace(13, 39, 3, dtype=int)
+    polymer_sizes = np.linspace(13, 39, 13, dtype=int)
 
-    for i in range(1):
+    for i in range(13):
         print(i)
         grid = create_polymer_grid(N, M, polymer_sizes[i])
         _, energy, number_of_clusters = monte_carlo(grid, N_s, M, T, n=n, t_equil=t_eq, t_r=t_r,
                                                     move_polymer=medium_flexibility_move, is_illegal_move=always_false,
                                                     make_measurement=measure_number_of_clusters)
         np.savez(f"oppgave2h_L_{polymer_sizes[i]}.npz", energy=energy, number_of_clusters=number_of_clusters)
-        mean_number_of_clusters = np.mean(number_of_clusters)
-        monomers = 2 * M * polymer_sizes[i]
-        cluster_sizes = monomers / number_of_clusters
-        number_of_clusters_std = np.std(number_of_clusters)
-        cluster_sizes_std = np.std(cluster_sizes)
-        mean_cluster_sizes_per_L[i] = mean_number_of_clusters / polymer_sizes[i]
-        mean_m[i] = mean_number_of_clusters
-        std_m[i] = cluster_sizes_std
-        std_d_per_L[i] = number_of_clusters_std
-    plot_measurements([(mean_cluster_sizes_per_L, std_d_per_L), (mean_m, std_m)], polymer_sizes)
 
 
 def load_2h_and_plot():
-    mean_cluster_sizes_per_L_array = np.zeros(1)
-    std_cluster_size_per_L_array = np.zeros(1)
-    mean_number_of_clusters_array = np.zeros(1)
-    std_number_of_clusters_array = np.zeros(1)
-    polymer_sizes = np.linspace(13, 39, 3, dtype=int)[:1]
+    mean_cluster_sizes_per_L_array = np.zeros(13)
+    std_cluster_size_per_L_array = np.zeros(13)
+    mean_number_of_clusters_array = np.zeros(13)
+    std_number_of_clusters_array = np.zeros(13)
+    polymer_sizes = np.linspace(13, 39, 13, dtype=int)
     M = 5
 
-    for i in range(1):
+    for i in range(13):
         data = np.load(f"oppgave2h_L_{polymer_sizes[i]}.npz")
         number_of_clusters = data["number_of_clusters"]
         monomers_in_grid = 2 * M * polymer_sizes[i]
@@ -194,7 +180,7 @@ def main():
 if __name__ == "__main__":
     # simulation_with_polymers()
     # simulation_with_polymers_using_medium_flexibility()
-    # calculate_expected_values()
+    calculate_expected_values()
     load_2h_and_plot()
     # check_std_deviation()
     # sim_mean_cluster_size()
