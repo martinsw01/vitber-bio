@@ -57,18 +57,20 @@ def plot_mean_cluster_sizes(mean_cluster_sizes, std_devs, temperatures):
     plt.show()
 
 
-def plot_measurements(measurements, x, titles, xlabel, ylabels):
-    _, axs = plt.subplots(len(measurements))
-    if not isinstance(axs, np.ndarray):
-        axs = [axs]
-    for (mean, std), title, ylabel, ax in zip(measurements, titles, ylabels, axs):
+def plot_measurements(results, x, axs, titles, xlabel, ylabels):
+    for measurements, title, ylabel, ax in zip(results, titles, ylabels, axs):
         ax.set_title(title)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        ax.plot(x, mean)
-        ax.errorbar(x, mean, std, marker='^', color="C0")
+        for mean, std in measurements:
+            color = [random.random() for _ in range(3)]
+            ax.errorbar(x, mean, std, color=color)
     plt.tight_layout()
     plt.show()
+
+
+def plot_cluster_grid(ax, grid):
+    ax.pcolormesh(grid[::-1, ])
 
 
 def plot_two_energies(energy1, energy2, name_energy1, name_energy2):

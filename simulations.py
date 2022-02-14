@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numba import njit
 
-from grid import measure_number_of_clusters
+from grid import measure_number_of_clusters, get_cluster_grid
 from grid_creator import create_grid, create_polymer_grid
 from montecarlo import monte_carlo
 from move import rigid_move, medium_flexibility_move
-from visualization import plot_energy_and_grid, create_plotter, plot_measurements, plot_two_energies, show_polymers
+from visualization import plot_energy_and_grid, create_plotter, plot_measurements, plot_two_energies, show_polymers, \
+    plot_cluster_grid
 
 
 # Oppgave 1f)
@@ -22,6 +23,13 @@ def simulate_monomers(N, M, N_s, T):
 def simulate_monomers_with_visualizations(N, M, N_s, T):
     grid = create_grid(N, M)
     _, _, _ = monte_carlo(grid, N_s, M, T, on_iteration=create_plotter())
+
+
+def simulate_cluster_grid(N, M, N_s, T):
+    grid = create_grid(N, M)
+    final_grid, _, _ = monte_carlo(grid, N_s, M, T)
+    cluster_grid, _ = get_cluster_grid(final_grid)
+    plot_cluster_grid(cluster_grid)
 
 
 def t_equil(T, t_max, s, T_l, C):
@@ -41,18 +49,10 @@ def sim_mean_cluster_size():
     M = 25
     n = 100
 
-    results = [monte_carlo(grid=create_grid(N, M),
-                           N_s=t_equil(T, t_max, s, T_l, C) + t_r * n,
-                           M=M, T=T, n=n,
-                           t_equil=t_equil(T, t_max, s, T_l, C),
-                           t_r=t_r,
-                           make_measurement=measure_number_of_clusters)
-               for T in temperatures]
+    measurements = [measure_mean_cluster_size(N, M, t_max, s, T_l, C, t_r, n, temperatures) for _ in range(2)]
 
-    cluster_sizes = [2 * M / number_of_clusters for _, _, number_of_clusters in results]
-    mean_cluster_sizes = [np.mean(m) for m in cluster_sizes]
-    std_devs = [np.std(m) for m in cluster_sizes]
-    plot_measurements([(mean_cluster_sizes, std_devs)], x=temperatures,
+    _, ax = plt.subplots(1)
+    plot_measurements([measurements], x=temperatures, axs=[ax],
                       titles=["Mean cluster sizes"], xlabel="Temperature", ylabels=["Cluster size"])
 
 
@@ -130,7 +130,7 @@ def load_2h_and_plot():
     std_cluster_size_per_L_array = np.zeros(13)
     mean_number_of_clusters_array = np.zeros(13)
     std_number_of_clusters_array = np.zeros(13)
-    polymer_sizes = np.linspace(13, 39, 13, dtype=int)
+    polymer_sizes = np.linspace(3, 39, 13, dtype=int)
     M = 5
 
     for i in range(13):
@@ -149,9 +149,11 @@ def load_2h_and_plot():
         std_cluster_size_per_L_array[i] = cluster_sizes_std / polymer_sizes[i]
         std_number_of_clusters_array[i] = number_of_clusters_std
 
-    plot_measurements([(mean_cluster_sizes_per_L_array, std_number_of_clusters_array),
-                       (mean_number_of_clusters_array, std_cluster_size_per_L_array)],
-                      x=polymer_sizes, titles=["Mean cluster sizes per L", "Mean number of clusters"],
+    measurements = [[(mean_cluster_sizes_per_L_array, std_number_of_clusters_array)],
+                    [(mean_number_of_clusters_array, std_cluster_size_per_L_array)]]
+    _, axs = plt.subplots(2)
+    plot_measurements(measurements, x=polymer_sizes, axs=axs,
+                      titles=["Mean cluster sizes per L", "Mean number of clusters"],
                       xlabel="Polymer size", ylabels=["Cluster size per L", "Number of clusters"])
 
 
