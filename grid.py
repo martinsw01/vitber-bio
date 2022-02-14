@@ -1,5 +1,6 @@
 import numpy as np
 from numba import njit
+from visualization import show_polymers
 
 
 @njit
@@ -56,12 +57,14 @@ def is_polymer_broken(grid, polymer):
     monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if grid[i, j] == polymer])
 
     clean_grid = np.zeros((N, N))
-    for monomer in zip(monomer_positions):
-        clean_grid[monomer] = polymer
-    new_grid = return_cluster(clean_grid, monomer_positions[0][0], monomer_positions[0][1], polymer)
-    new_monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if new_grid[i, j] == -polymer])
-
-    if len(monomer_positions) == len(new_monomer_positions):
+    for monomer in monomer_positions:
+        clean_grid[monomer[0], monomer[1]] = polymer
+    _, num_of_clusters = get_cluster_grid(clean_grid)
+    # new_grid = return_cluster(clean_grid, monomer_positions[0][0], monomer_positions[0][1], polymer)
+    # new_monomer_positions = np.array([[i, j] for i in range(N) for j in range(N) if new_grid[i, j] == -polymer])
+    # print(len(monomer_positions), " vs ", len(new_monomer_positions))
+    # if len(monomer_positions) == len(new_monomer_positions):
+    if num_of_clusters == 1:
         return False
     return True
 

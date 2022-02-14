@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from numba import njit
+import random
 
 from grid import measure_number_of_clusters, get_cluster_grid
 from grid_creator import create_grid, create_polymer_grid
@@ -101,8 +102,8 @@ def compare_medium_flexibility_with_rigid_move():
                                                     is_illegal_move=always_false)
 
     plot_two_energies(energy_rigid, energy_medium_flex, "Rigid move", "Medium flexible move")
-    show_polymers(final_grid_medium_flex, title="Medium flexible move")
-    show_polymers(final_grid_rigid, title="Rigid move")
+    show_polymers(final_grid_medium_flex, L, title="Medium flexible move")
+    show_polymers(final_grid_rigid, L, title="Rigid move")
 
 
 # 2 h)
@@ -195,15 +196,28 @@ def main():
     N = 15
     M = 25
     N_s = 500_000
-    simulate_monomers_with_visualizations(M, N, N_s, T[0])
+    # simulate_monomers_with_visualizations(M, N, N_s, T[0])
     # simulate_monomers(N, M, N_s, T[0])
 
 
 if __name__ == "__main__":
+    """np.random.seed(0)
+    random.seed(0)
+    T = 300
+    N = 15
+    M = 5
+    L=13
+    grid = create_polymer_grid(N,M, L)
+    show_polymers(grid, L)
+    grid = medium_flexibility_move(grid, -4, [-1,0])
+    show_polymers(grid, L)"""
+
+    compare_medium_flexibility_with_rigid_move()
+
     # simulation_with_polymers()
     # simulation_with_polymers_using_medium_flexibility()
     # calculate_expected_values()
-    load_2h_and_plot()
+    # load_2h_and_plot()
     # check_std_deviation()
     # sim_mean_cluster_size()
     # main()
